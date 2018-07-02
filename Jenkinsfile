@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'npm install'
+        bat 'npm install'
       }
     }
     stage('Create Packer AMI') {
@@ -15,7 +15,7 @@ pipeline {
           withCredentials([
             usernamePassword(credentialsId: 'ada90a34-30ef-47fb-8a7f-a97fe69ff93f', passwordVariable: 'AWS_SECRET', usernameVariable: 'AWS_KEY')
           ]) {
-            sh 'packer build -var aws_access_key=${AWS_KEY} -var aws_secret_key=${AWS_SECRET} packer/packer.json'
+            bat 'packer build -var aws_access_key=${AWS_KEY} -var aws_secret_key=${AWS_SECRET} packer/packer.json'
         }
       }
     }
@@ -25,9 +25,9 @@ pipeline {
             usernamePassword(credentialsId: 'ada90a34-30ef-47fb-8a7f-a97fe69ff93f', passwordVariable: 'AWS_SECRET', usernameVariable: 'AWS_KEY'),
             usernamePassword(credentialsId: '2facaea2-613b-4f34-9fb7-1dc2daf25c45', passwordVariable: 'REPO_PASS', usernameVariable: 'REPO_USER'),
           ]) {
-            sh 'rm -rf node-app-terraform'
-            sh 'git clone https://github.com/WilliamBowen/node-app-terraform.git'
-            sh '''
+            bat 'rm -rf node-app-terraform'
+            bat 'git clone https://github.com/WilliamBowen/node-app-terraform.git'
+            bat '''
                cd node-app-terraform
                terraform init
                terraform apply -auto-approve -var access_key=${AWS_KEY} -var secret_key=${AWS_SECRET}
